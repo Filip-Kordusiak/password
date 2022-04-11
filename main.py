@@ -1,8 +1,10 @@
+import json
 import tkinter
 from tkinter import *
 from tkinter import messagebox
 import random
 import pyperclip
+import json
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 # Password Generator Project
@@ -44,13 +46,31 @@ def save():
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
+    new_dara = {
+        website: {
+            "email": email,
+            "password": password,
+        }}
 
     if len(website) == 0 or len(password) == 0:
         messagebox.showinfo(title="ups", message=" u did not filled the fields ")
-    is_ok = messagebox.askokcancel("Information", "zapisac?")
-    if is_ok:
-        with open("hasla.txt", "a") as f:
-            f.write(f"{website} | {email} | {password}\n")
+    #is_ok = messagebox.askokcancel("Information", "zapisac?")
+    #if is_ok:
+    else:
+        try: #witch can fail
+            with open("hasla.json", "r") as f:
+                #reading old data
+                data = json.load(f)
+        except FileNotFoundError: #deals with any fail
+            with open("hasla.json", "w") as f:
+                json.dump(new_dara , f, indent=4)
+        else: # if there is no issues
+            #reading old data
+            data.update(new_dara)
+            with open("hasla.json", "w") as f:
+                #updating data
+                json.dump(data, f, indent=4)
+        finally: # runs anyway
             website_entry.delete(0, END)
             password_entry.delete(0, END)
 
