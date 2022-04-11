@@ -95,15 +95,34 @@ password_label = Label(text="password")  ###
 password_label.grid(row=3, column=0)
 
 # entries
-website_entry = Entry(width=42)
-website_entry.grid(row=1, column=1, columnspan=2)
+website_entry = Entry(width=28)
+website_entry.grid(row=1, column=1)
 email_entry = Entry(width=42)
 email_entry.grid(row=2, column=1, columnspan=2)
 email_entry.insert(0, "lol@gmail")  # automatycznie wpisuje na poćżatku ten email.
 password_entry = Entry(width=28)
 password_entry.grid(row=3, column=1)
 
+def find_pass():
+    website = website_entry.get()
+    try:
+        with open("hasla.json", "r") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        messagebox.showinfo(message="this data does not exist")
+    else:
+            if website in data:
+                email = data[website]["email"]
+                password = data[website]["password"]
+                messagebox.showinfo(title=website, message=f"Email: {email}\n pass{password}")
+            else:
+                messagebox.showinfo(message=f"no detaild{website}")
+
+
+
 # Buttons
+find_button = Button(text="search", command=find_pass, width=10)
+find_button.grid(row=1, column=2)
 generate_button = Button(text="Generate Pass", command=generate_pass)
 generate_button.grid(row=3, column=2)
 add_button = Button(text="Add", width=36, command=save)
